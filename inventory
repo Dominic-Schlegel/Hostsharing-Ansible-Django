@@ -1,0 +1,2 @@
+[django]
+xyz00 ansible_ssh_host=xyz00.hostsharing.net ansible_ssh_user=xyz00 pac=xyz00 domain=django.xyz00.hostsharing.net user=django password=testpassw0rd!?
