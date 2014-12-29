@@ -1,0 +1,44 @@
+---
+- hosts: django
+  tasks:
+  - name: ensure user exists
+    hsuser.js: name="{{pac}}-{{user}}" password="{{password}}" exists="true"
+  - name: setup domain
+    hsdomain.js: name="{{domain}}" owner="{{pac}}-{{user}}" exists="true"
+  - name: create env
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: virtualenv djangoenv chdir="/home/pacs/{{pac}}/users/{{user}}/"
+  - name: install django
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: djangoenv/bin/easy_install django chdir="/home/pacs/{{pac}}/users/{{user}}/"
+  - name: create project in home directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: /home/pacs/{{pac}}/users/{{user}}/djangoenv/bin/django-admin.py startproject mypro chdir="/home/pacs/{{pac}}/users/{{user}}/"
+  - name: create project in home directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: /home/pacs/{{pac}}/users/{{user}}/djangoenv/bin/python settings.py chdir="/home/pacs/{{pac}}/users/{{user}}/mypro/mypro"
+  - name: upload passenger_wsgi.py file to app directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    template: dest="/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/app/passenger_wsgi.py" src="templates/django.passenger_wsgi.py" mode=0644
+  - name: start passenger_wsgi.py
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: /home/pacs/{{pac}}/users/{{user}}/djangoenv/bin/python passenger_wsgi.py chdir="/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/app/"
+  - name: delete old www directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: rm -rf www chdir="/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/subs"
+  - name: create new www directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    command: mkdir www chdir="/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/subs"
+  - name: upload .htaccess file to domain directory
+    sudo: yes
+    sudo_user: "{{pac}}-{{user}}"
+    template: dest="/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/.htaccess" src="templates/django.htaccess" mode=0644
+
