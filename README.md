@@ -26,7 +26,7 @@ All needed parameters can be set in the inventory file now. Change xyz00 to the 
 
     $ vim inventory
     
-Now the option -i can be used to read this inventory file instead of the /etc/ansible/hosts file. If we want to login with an SSH-Key instead of an SSH-Password, we have to remove the -k option from the following string. The -K is needed to prompt us once for the sudo password of the new user. We run:
+The option -i can be used to read this inventory file instead of the /etc/ansible/hosts file. If we want to login with an SSH-Key instead of an SSH-Password, we have to remove the -k option from the following string. The -K is needed to prompt us once for the sudo password of the new user. We run:
 
     $ ansible-playbook -i inventory playbook-django.yml -k -K
 
